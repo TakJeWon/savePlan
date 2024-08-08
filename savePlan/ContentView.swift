@@ -7,48 +7,82 @@
 
 import SwiftUI
 
+enum PlanViewType {
+    case monthly
+    case yearly
+}
+
 struct ContentView: View {
     
     @State private var isBottomSheetOpen = false
+    @State private var showType: PlanViewType = .monthly
     
     var body: some View {
         VStack {
-            VStack(alignment: .trailing){
-                Button("월별"){
-                    
+            HStack(){
+                Spacer()
+                Button(action: {
+                    if showType == .monthly {
+                        showType = .yearly
+                    } else {
+                        showType = .monthly
+                    }
+                }) {
+                    Text(showType == .monthly ? "월별" : "년도별")
+                        .foregroundColor(.black)
+                        .frame(width: 85.0, height: 33.0)
+                        .background(Color.white)
+                        .cornerRadius(30.0)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 30)
+                                .stroke(.black, lineWidth: 1)
+                        )
                 }
-                .foregroundColor(.black)
-                .frame(width: 85.0, height: 33.0)
-                .background {
-                    Color(.white)
-                        .ignoresSafeArea()
-                }
-                .cornerRadius(/*@START_MENU_TOKEN@*/30.0/*@END_MENU_TOKEN@*/)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 30)
-                        .stroke(.black, lineWidth: 1)
-                )
             }
             .frame(maxWidth: .infinity, maxHeight: 50)
+            .padding(.horizontal)
             
-            Text("2024")
-            Grid(horizontalSpacing: 10, verticalSpacing: 10) {
-                ForEach(0..<4) { _ in
-                    GridRow {
-                        ForEach(0..<3) { _ in
-                            ZStack(alignment: .topLeading) {
-                                Color("MainBackgroundColor")
-                                    .cornerRadius(10.0)
-                                Text("2").padding(10)
-                                    
+            if (showType == .monthly) {
+                
+                Text("2024")
+                    .font(Font.title)
+                    .padding(.bottom)
+                
+                Grid(horizontalSpacing: 10, verticalSpacing: 10) {
+                    ForEach(0..<4) { columnIndex in
+                        GridRow {
+                            ForEach(0..<3) { rowIndex in
+                                ZStack(alignment: .topLeading) {
+                                    Color("MainBackgroundColor")
+                                        .cornerRadius(10.0)
+                                    Text("\((rowIndex + 1) + (columnIndex * 3))").padding(10)
+                                        
+                                }
+                                
                             }
-                            
-                        }
-                    }.frame(width: 110, height: 120)
+                        }.frame(width: 110, height: 120)
+                    }
                 }
+                .padding()
+            } else {
+                ScrollView {
+                    
+                        Grid(horizontalSpacing: 10, verticalSpacing: 10) {
+                            ForEach(0..<5) { columnIndex in
+                                ZStack(alignment: .topLeading) {
+                                    Color("MainBackgroundColor")
+                                        .cornerRadius(10.0)
+                                    Text("2024").padding(10)
+                                    
+                                }
+                                .frame(width: .infinity, height: 120)
+                            }
+                        }
+                        .padding()
+                }
+                .frame(width: .infinity, height: 600)
             }
-            .padding()
-            
+                
         
         }
         .padding(0.0)
@@ -61,11 +95,11 @@ struct ContentView: View {
         BottomSheetView(isOpen: $isBottomSheetOpen, maxHeight: 500) {
                 VStack(alignment: .trailing){
                     HStack(){
-                        Button("월별"){
+                        Button("+ money plan"){
                             
                         }
                         .foregroundColor(.black)
-                        .frame(width: 85.0, height: 85.0)
+                        .frame(width: 150.0, height: 50.0)
                         .background {
                             Color(.white)
                                 .ignoresSafeArea()
@@ -76,7 +110,7 @@ struct ContentView: View {
                             
                         }
                         .foregroundColor(.black)
-                        .frame(width: 85.0, height: 85.0)
+                        .frame(width: 85.0, height: 50.0)
                         .background {
                             Color(.white)
                                 .ignoresSafeArea()

@@ -18,6 +18,12 @@ struct ContentView: View {
     @State private var showType: PlanViewType = .monthly
     
     var body: some View {
+        
+        let today = Date()
+        let components = Calendar.current.dateComponents([.year, .month], from: today)
+        let year = components.year ?? 0
+        let month = components.month ?? 0
+        
         VStack {
             HStack(){
                 Spacer()
@@ -44,7 +50,7 @@ struct ContentView: View {
             
             if (showType == .monthly) {
                 
-                Text("2024")
+                Text(Date.now, format: .dateTime.year())
                     .font(Font.title)
                     .padding(.bottom)
                 
@@ -57,7 +63,12 @@ struct ContentView: View {
                                         .cornerRadius(10.0)
                                     Text("\((rowIndex + 1) + (columnIndex * 3))").padding(10)
                                         
+                                        
                                 }
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(.black, lineWidth: (rowIndex + 1) + (columnIndex * 3) == month ? 1 : 0)
+                                )
                                 
                             }
                         }.frame(width: 110, height: 120)
@@ -75,12 +86,13 @@ struct ContentView: View {
                                     Text("2024").padding(10)
                                     
                                 }
-                                .frame(width: .infinity, height: 120)
+                                .frame(height: 116)
                             }
                         }
                         .padding()
                 }
-                .frame(width: .infinity, height: 600)
+                .padding()
+                .frame(height: 600)
             }
                 
         
